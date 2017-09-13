@@ -63,5 +63,34 @@ int main(int argc, char** argv)
 				);
 			}
 		}
+
+		for (int metric = 0; metric < 4; metric++)
+		{
+			char fn[64];
+			static const char *metricNames[4] = {"pattern", "shuffled_pattern", "signature", "shuffled_signature"};
+			sprintf(fn, "matrix_%s.csv", metricNames[metric]);
+			FILE *f = fopen(fn, "wb");
+			for (int i = 0; i < argc-1; i++)
+				fprintf(f, ",%s", argv[1+i]);
+			fprintf(f, "\n");
+			for (int i = 0; i < argc-1; i++)
+			{
+				fprintf(f, "%s", argv[1+i]);
+				for (int j = 0; j < argc-1; j++)
+				{
+					float n;
+					switch (metric)
+					{
+						case 0: n = pattern_distance(patterns[i], patterns[j]); break;
+						case 1: n = pattern_distance(shuffled_patterns[i], shuffled_patterns[j]); break;
+						case 2: n = signature_distance(signatures[i], signatures[j]); break;
+						case 3: n = signature_distance(shuffled_signatures[i], shuffled_signatures[j]); break;
+					}
+					fprintf(f, ",%f", n);
+				}
+				fprintf(f, "\n");
+			}
+			fclose(f);
+		}
 	}
 }
