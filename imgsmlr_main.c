@@ -36,6 +36,12 @@ int main(int argc, char** argv)
 				return 1;
 			}
 
+			if (!patterns[i])
+			{
+				fprintf(stderr, "Error loading file: %s\n", argv[1+i]);
+				return 1;
+			}
+
 			free(data);
 
 			shuffled_patterns[i] = shuffle_pattern(patterns[i]);
